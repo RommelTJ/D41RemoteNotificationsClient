@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #define DEVICE_SERVICE_TYPE @"_http._tcp"
 #define DEVICE_SERVICE_NAME @"com.rommelrico.DeviceToken"
 
@@ -79,6 +82,31 @@
 
 -(void)netServiceDidResolveAddress:(NSNetService *)sender{
     [self updateDisplay:__func__];
+    //Get the array of address of the service (Typically just a single address).
+    NSArray *addressArray = [sender addresses];
+    [self updateDisplay:[[addressArray description] UTF8String]];
+    
+    //We need the socket address.
+    NSData *addressData = addressArray[0];
+    self.socketAddress = (struct sockaddr_in *)[addressData bytes];
+    
+    //IP Address
+    char *ipAddress = inet_ntoa(self.socketAddress->sin_addr);
+    self.myServerAddressLabel.text = [NSString stringWithUTF8String:ipAddress];
+    
+    //Port Number
+    NSString *portString = [NSString stringWithFormat:@"port: %i", ntohs(self.socketAddress->sin_port)];
+    self.myServerPortLabel.text = portString;
+    
+    //Send a request to the web service at the address/port
+    NSString *urlString = [NSString stringWithFormat:@"http://%s:%i/deviceToken", ipAddress, ntohs(_socketAddress->sin_port)];
+    [self updateDisplay:[urlString UTF8String]];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSLog(@"connectionError: %@", connectionError);
+    }];
 }
 
 -(void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict {
