@@ -168,6 +168,18 @@
 				TargetAttributes = {
 					7781E8C61A8D8FC300D7E7EA = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 4L2V3AB2J2;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.GameCenter = {
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 					7781E8DF1A8D8FC300D7E7EA = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -345,9 +357,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = D41RemoteNotificationsClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -355,9 +370,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = D41RemoteNotificationsClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -414,6 +432,7 @@
 				7781E8EC1A8D8FC300D7E7EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7781E8ED1A8D8FC300D7E7EA /* Build configuration list for PBXNativeTarget "D41RemoteNotificationsClientTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +441,7 @@
 				7781E8EF1A8D8FC300D7E7EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
