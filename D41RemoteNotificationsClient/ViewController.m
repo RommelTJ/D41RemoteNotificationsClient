@@ -102,11 +102,45 @@
     NSString *urlString = [NSString stringWithFormat:@"http://%s:%i/deviceToken", ipAddress, ntohs(_socketAddress->sin_port)];
     [self updateDisplay:[urlString UTF8String]];
     
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        NSLog(@"connectionError: %@", connectionError);
-    }];
+    //NOTE: In future, do web service.
+    //NSURL *url = [NSURL URLWithString:urlString];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    //[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+    //    NSLog(@"connectionError: %@", connectionError);
+    //}];
+    
+    //For now, use socket access and hard code a DeviceToken.
+    char deviceToken[] = { 1,  2,  3,  4,  5,  6,  7,  8,
+                           9, 10, 11, 12, 13, 14, 15, 16,
+                          17, 18, 19, 20, 21, 22, 23, 24,
+                          25, 26, 27, 28, 29, 30, 31, 32 };
+    
+    NSData *deviceData = [NSData dataWithBytes:deviceToken length:32];
+    
+    //Send the device data to the service via a socket.
+    // 1. Create Socket
+    int socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFileDescriptor < 0) {
+        [self updateDisplay:"socket error"];
+        NSLog(@"socket error: %i", errno);
+        return;
+    }
+    
+    // 2. Connect the socket.
+    int result = connect(socketFileDescriptor, (struct sockaddr *)self.socketAddress, sizeof(struct sockaddr_in));
+    if (result < 0) {
+        [self updateDisplay:"connect failed"];
+        NSLog(@"connect error: %i", errno);
+        return;
+    }
+    
+    // 3. Write the socket.
+    size_t size = write(socketFileDescriptor, [deviceData bytes], [deviceData length]);
+    NSLog(@"wrote %lu bytes", size);
+    
+    // 4. Close
+    close(socketFileDescriptor);
+    
 }
 
 -(void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict {
